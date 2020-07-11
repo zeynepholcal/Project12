@@ -59,7 +59,7 @@ public class Project extends BaseClass {
         driver.findElement(By.cssSelector("button[id='UIFormControl-23']")).click();
         List<WebElement> list1 = driver.findElements(By.cssSelector("li[id*='typeahead']"));
         Random rand = new Random();
-        int a = rand.nextInt(list1.size() - 1);
+        int a = rand.nextInt(list1.size());
         list1.get(a).click();
 // Enter the amount
         driver.findElement(By.cssSelector("input[id='UIFormControl-27']")).sendKeys("100");
