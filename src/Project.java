@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class Project extends BaseClass {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, 5);
         driver.get("https://app.hubspot.com/login");
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -78,8 +78,20 @@ public class Project extends BaseClass {
         action.sendKeys(Keys.ENTER).perform();
 
 driver.findElement(By.xpath("//span[text()='Create']")).click();
-                // Click on Deals
+// click on edit button
+        driver.findElement(By.xpath("//span[@data-selenium-test='highlight-editor-icon']")).click();
+        // clear it
+        driver.findElement(By.xpath("//div[@class='private-form__input-wrapper'] //input[@type='text'][1]")).clear();
+        // enter new name
+        driver.findElement(By.xpath("//div[@class='private-form__input-wrapper'] //input[@type='text'][1]")).sendKeys("Good Product");
+        // click on save
+        driver.findElement(By.cssSelector("button[data-button-use='tertiary']")).click();
 
+        wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")),"Good Product"));
+        String after= driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")).getText();
+        after= after.replaceAll("[0-9$]","");
+        after = after.trim();
+        Assert.assertEquals("Good Product",after);
 
     }
 }
