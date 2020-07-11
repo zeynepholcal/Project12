@@ -4,16 +4,23 @@ import net.bytebuddy.jar.asm.Handle;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.swing.*;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class Project extends BaseClass {
     public static void main(String[] args) {
-        WebDriverWait wait = new WebDriverWait(driver,5);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
         driver.get("https://app.hubspot.com/login");
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
@@ -38,23 +45,40 @@ public class Project extends BaseClass {
         Set<String> windowHandles = driver.getWindowHandles();
 
         for (String windowHandle : windowHandles) {
-            if(!windowHandle.equals(main)){
+            if (!windowHandle.equals(main)) {
 
                 driver.switchTo().window(windowHandle);
             }
         }
-String url = driver.getCurrentUrl();
+        String url = driver.getCurrentUrl();
         Assert.assertEquals("https://app.hubspot.com/pricing/8080093/sales?upgradeSource=deals-" +
-                "create-deal-general-create-deal-multiple-pipelines-pql-feature-lock&term=annual&edition=starter",url);
+                "create-deal-general-create-deal-multiple-pipelines-pql-feature-lock&term=annual&edition=starter", url);
 
+        driver.close();
+        driver.switchTo().window(main);
+        driver.findElement(By.cssSelector("button[id='UIFormControl-23']")).click();
+        List<WebElement> list1 = driver.findElements(By.cssSelector("li[id*='typeahead']"));
+        Random rand = new Random();
+        int a = rand.nextInt(list1.size() - 1);
+        list1.get(a).click();
+// Enter the amount
+        driver.findElement(By.cssSelector("input[id='UIFormControl-27']")).sendKeys("100");
 
+        // select deal type randomly
+       // driver.findElement(By.cssSelector("div[id='uiabstractdropdown-button-37']")).click();
 
+        Actions action = new Actions(driver);
+    //    driver.switchTo().frame(0);
+        action.moveToElement(driver.findElement(By.cssSelector("div[id='uiabstractdropdown-button-37']"))).click().perform();
 
+        int b = rand.nextInt(3);
+        for (int i=0;i<b; i++)
+            action.sendKeys(Keys.ARROW_DOWN).perform();
 
+        action.sendKeys(Keys.ENTER).perform();
 
-
-
-        // Click on Deals
+driver.findElement(By.xpath("//span[text()='Create']")).click();
+                // Click on Deals
 
 
     }
