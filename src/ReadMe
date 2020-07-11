@@ -23,8 +23,8 @@ public class ReadMe {
         Verify name is changed
 
         Click on actions button
-        Click on Delete 
-        Click on Delete deal
+        Click on Delete
+        Click on Delete deal   nn
 
         Verify deal is not displayed any more
 
