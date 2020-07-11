@@ -7,7 +7,17 @@ public class Project extends BaseClass {
     public static void main(String[] args) {
         driver.get("https://app.hubspot.com/login");
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
         driver.findElement(By.id("username")).sendKeys("olcalzeynephale@gmail.com");
-        driver.findElement(By.id("password")).sendKeys("Istanbul1234");
+        driver.findElement(By.id("password")).sendKeys("Istanbul1234.");
+        driver.findElement(By.id("loginBtn")).click();
+
+
+        // Click on Sales
+        driver.findElement(By.xpath("(//a[@id='nav-primary-sales-branch'])[1]")).click();
+
+        // Click on Deals
+
+
     }
 }
