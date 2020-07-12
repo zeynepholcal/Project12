@@ -105,6 +105,29 @@ public class Project extends BaseClass {
 
         //        Click on Delete deal
         driver.findElement(By.cssSelector("button[data-selenium-test='delete-dialog-confirm-button']")).click();
+        String deleteDeal = "Good Product";
+        List<WebElement> column = driver.findElements(By.cssSelector("a[data-selenium-test='deal-chicklet-title']"));
+
+        for (WebElement webElement : column) {
+            webElement.click();
+          //  wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")), deleteDeal));
+           Thread.sleep(3000);
+            after = driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")).getText();
+            after = after.replaceAll("[0-9$]", "");
+            after = after.trim();
+            if (after.equals(deleteDeal)) {
+                //Click on actions button
+                driver.findElement(By.cssSelector("button[data-selenium-test='profile-settings-actions-btn']")).click();
+
+                //        Click on Delete
+                driver.findElement(By.cssSelector("button[data-selenium-test='profile-settings-profileSettings.delete']")).click();
+
+                //        Click on Delete deal
+                driver.findElement(By.cssSelector("button[data-selenium-test='delete-dialog-confirm-button']")).click();
+
+            }
+
+        }
 
     }
 }
