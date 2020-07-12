@@ -20,9 +20,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Project extends BaseClass {
     public static void main(String[] args) throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+
+
         driver.get("https://app.hubspot.com/login");
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        WebDriverWait wait = new WebDriverWait(driver, 5);
 
         driver.findElement(By.id("username")).sendKeys("olcalzeynephale@gmail.com");
         driver.findElement(By.id("password")).sendKeys("Istanbul1234.");
@@ -41,7 +43,7 @@ public class Project extends BaseClass {
         driver.findElement(By.id("uiabstractdropdown-button-49")).click();
 
         String main = driver.getWindowHandle();
-//Switch to new window
+        //Switch to new window
         Set<String> windowHandles = driver.getWindowHandles();
 
         for (String windowHandle : windowHandles) {
@@ -56,42 +58,53 @@ public class Project extends BaseClass {
 
         driver.close();
         driver.switchTo().window(main);
-        driver.findElement(By.cssSelector("button[id='UIFormControl-23']")).click();
+        driver.findElement(By.cssSelector("button[data-selenium-test='property-input-dealstage']")).click();
+        //  driver.findElement(By.xpath("//span[text()='Appointment scheduled']")).click();
         List<WebElement> list1 = driver.findElements(By.cssSelector("li[id*='typeahead']"));
         Random rand = new Random();
         int a = rand.nextInt(list1.size());
         list1.get(a).click();
-// Enter the amount
-        driver.findElement(By.cssSelector("input[id='UIFormControl-27']")).sendKeys("100");
+        // Enter the amount
+        driver.findElement(By.cssSelector("input[data-field='amount']")).sendKeys("500");
 
         // select deal type randomly
-       // driver.findElement(By.cssSelector("div[id='uiabstractdropdown-button-37']")).click();
+        // driver.findElement(By.cssSelector("div[id='uiabstractdropdown-button-37']")).click();
 
         Actions action = new Actions(driver);
-    //    driver.switchTo().frame(0);
-        action.moveToElement(driver.findElement(By.cssSelector("div[id='uiabstractdropdown-button-37']"))).click().perform();
+        //    driver.switchTo().frame(0);
+        action.moveToElement(driver.findElement(By.cssSelector("div[data-selenium-test='property-input-dealtype']"))).click().perform();
 
         int b = rand.nextInt(3);
-        for (int i=0;i<b; i++)
+        for (int i = 0; i < b; i++)
             action.sendKeys(Keys.ARROW_DOWN).perform();
 
         action.sendKeys(Keys.ENTER).perform();
 
-driver.findElement(By.xpath("//span[text()='Create']")).click();
+        driver.findElement(By.xpath("//span[text()='Create']")).click();
 // click on edit button
         driver.findElement(By.xpath("//span[@data-selenium-test='highlight-editor-icon']")).click();
         // clear it
         driver.findElement(By.xpath("//div[@class='private-form__input-wrapper'] //input[@type='text'][1]")).clear();
         // enter new name
-        driver.findElement(By.xpath("//div[@class='private-form__input-wrapper'] //input[@type='text'][1]")).sendKeys("Good Product");
+        String key2 = "Perfect Product";
+        driver.findElement(By.xpath("//div[@class='private-form__input-wrapper'] //input[@type='text'][1]")).sendKeys(key2);
         // click on save
         driver.findElement(By.cssSelector("button[data-button-use='tertiary']")).click();
 
-        wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")),"Good Product"));
-        String after= driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")).getText();
-        after= after.replaceAll("[0-9$]","");
+        wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")), key2));
+        String after = driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")).getText();
+        after = after.replaceAll("[0-9$]", "");
         after = after.trim();
-        Assert.assertEquals("Good Product",after);
+        Assert.assertEquals(key2, after);
+
+        //Click on actions button
+        driver.findElement(By.cssSelector("button[data-selenium-test='profile-settings-actions-btn']")).click();
+
+        //        Click on Delete
+        driver.findElement(By.cssSelector("button[data-selenium-test='profile-settings-profileSettings.delete']")).click();
+
+        //        Click on Delete deal
+        driver.findElement(By.cssSelector("button[data-selenium-test='delete-dialog-confirm-button']")).click();
 
     }
 }
