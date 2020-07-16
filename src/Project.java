@@ -24,10 +24,12 @@ public class Project extends BaseClass {
 
         driver.get("https://app.hubspot.com/login");
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, 7);
 
-        driver.findElement(By.id("username")).sendKeys("olcalzeynephale@gmail.com");
-        driver.findElement(By.id("password")).sendKeys("Istanbul1234.");
+        driver.findElement(By.id("username")).sendKeys("fatihgul@gmail.com");
+        driver.findElement(By.id("password")).sendKeys("Asdf4321-");
+//        driver.findElement(By.id("username")).sendKeys("olcalzeynephale@gmail.com");
+//        driver.findElement(By.id("password")).sendKeys("Istanbul1234.");
         driver.findElement(By.id("loginBtn")).click();
 
 
@@ -48,12 +50,13 @@ public class Project extends BaseClass {
 
         for (String windowHandle : windowHandles) {
             if (!windowHandle.equals(main)) {
-
                 driver.switchTo().window(windowHandle);
             }
         }
         String url = driver.getCurrentUrl();
-        Assert.assertEquals("https://app.hubspot.com/pricing/8080093/sales?upgradeSource=deals-" +
+//        Assert.assertEquals("https://app.hubspot.com/pricing/8080093/sales?upgradeSource=deals-" +
+//                "create-deal-general-create-deal-multiple-pipelines-pql-feature-lock&term=annual&edition=starter", url);
+        Assert.assertEquals("https://app.hubspot.com/pricing/8079994/sales?upgradeSource=deals-" +
                 "create-deal-general-create-deal-multiple-pipelines-pql-feature-lock&term=annual&edition=starter", url);
 
         driver.close();
@@ -63,71 +66,66 @@ public class Project extends BaseClass {
         List<WebElement> list1 = driver.findElements(By.cssSelector("li[id*='typeahead']"));
         Random rand = new Random();
         int a = rand.nextInt(list1.size());
+        // select deal type randomly
         list1.get(a).click();
         // Enter the amount
         driver.findElement(By.cssSelector("input[data-field='amount']")).sendKeys("500");
 
-        // select deal type randomly
-        // driver.findElement(By.cssSelector("div[id='uiabstractdropdown-button-37']")).click();
-
         Actions action = new Actions(driver);
-        //    driver.switchTo().frame(0);
         action.moveToElement(driver.findElement(By.cssSelector("div[data-selenium-test='property-input-dealtype']"))).click().perform();
 
-        int b = rand.nextInt(3);
+        int b = rand.nextInt(3); //Generate a random number up to 3
         for (int i = 0; i < b; i++)
-            action.sendKeys(Keys.ARROW_DOWN).perform();
+            action.sendKeys(Keys.ARROW_DOWN).perform(); //Randomly click Arrow Down to select on drop down menu
 
         action.sendKeys(Keys.ENTER).perform();
 
         driver.findElement(By.xpath("//span[text()='Create']")).click();
-// click on edit button
+        // click on edit button
         driver.findElement(By.xpath("//span[@data-selenium-test='highlight-editor-icon']")).click();
         // clear it
         driver.findElement(By.xpath("//div[@class='private-form__input-wrapper'] //input[@type='text'][1]")).clear();
         // enter new name
-        String key2 = "Perfect Product";
+        String key2 = "Good Product";
         driver.findElement(By.xpath("//div[@class='private-form__input-wrapper'] //input[@type='text'][1]")).sendKeys(key2);
         // click on save
         driver.findElement(By.cssSelector("button[data-button-use='tertiary']")).click();
 
+
         wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")), key2));
+        //get the name of deal and assign it to "after"
         String after = driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")).getText();
-        after = after.replaceAll("[0-9$]", "");
-        after = after.trim();
-        Assert.assertEquals(key2, after);
+        after = after.replaceAll("[0-9$]", ""); //delete all numeric and $ chars
+        after = after.trim(); // clear the space char from the string
+        Assert.assertEquals(key2, after);  //Checks if the name is edited
 
-        //Click on actions button
-        driver.findElement(By.cssSelector("button[data-selenium-test='profile-settings-actions-btn']")).click();
+        driver.findElement(By.xpath("(//i18n-string[text()='Deals'])[1]")).click();
 
-        //        Click on Delete
-        driver.findElement(By.cssSelector("button[data-selenium-test='profile-settings-profileSettings.delete']")).click();
-
-        //        Click on Delete deal
-        driver.findElement(By.cssSelector("button[data-selenium-test='delete-dialog-confirm-button']")).click();
-        String deleteDeal = "Good Product";
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a[data-selenium-test='deal-chicklet-title']")));
         List<WebElement> column = driver.findElements(By.cssSelector("a[data-selenium-test='deal-chicklet-title']"));
+        //  List<WebElement> column = driver.findElements(By.cssSelector("div[data-selenium-test='preview-header']"));
+        // wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a[data-button-use='link']")));
+        //  List<WebElement> column = driver.findElements(By.cssSelector("a[data-button-use='link']"));
 
-        for (WebElement webElement : column) {
-            webElement.click();
-          //  wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")), deleteDeal));
-           Thread.sleep(3000);
-            after = driver.findElement(By.xpath("//span[@data-selenium-test='highlightTitle']")).getText();
-            after = after.replaceAll("[0-9$]", "");
-            after = after.trim();
-            if (after.equals(deleteDeal)) {
-                //Click on actions button
-                driver.findElement(By.cssSelector("button[data-selenium-test='profile-settings-actions-btn']")).click();
-
-                //        Click on Delete
-                driver.findElement(By.cssSelector("button[data-selenium-test='profile-settings-profileSettings.delete']")).click();
-
-                //        Click on Delete deal
-                driver.findElement(By.cssSelector("button[data-selenium-test='delete-dialog-confirm-button']")).click();
-
-            }
-
+        int count = 0; //counter of deleted elements
+        int size = column.size();
+        for (int i = 0; i < column.size(); ) {
+            //   System.out.println(column.get(i).getText());
+            action.moveToElement(column.get(i)).click().perform();
+            //Click on actions button
+            driver.findElement(By.cssSelector("button[data-selenium-test='profile-settings-actions-btn']")).click();
+            //        Click on Delete
+            driver.findElement(By.cssSelector("button[data-selenium-test='profile-settings-profileSettings.delete']")).click();
+            //        Click on Delete deal
+            driver.findElement(By.cssSelector("button[data-selenium-test='delete-dialog-confirm-button']")).click();
+            count++; //counter of deleted elements
+            //Refresh the list, other wise it gives Stale element fault
+            column = driver.findElements(By.cssSelector("a[data-selenium-test='deal-chicklet-title']"));
         }
+
+        //If the number of count and size of the list are equal, all the elements were deleted by successfully
+        Assert.assertEquals(count, size);
+
 
     }
 }
